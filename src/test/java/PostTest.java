@@ -1,22 +1,50 @@
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
 
+import static io.restassured.RestAssured.given;
+
+import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class PostTest {
 
-    @Test
-    public void getPost() {
+    private static RequestSpecification requestSpecification;
+    private static ResponseSpecification responseSpecification;
+
+    @BeforeClass
+    public void createRequestSpecification() {
+        requestSpecification = new RequestSpecBuilder()
+                .setBaseUri("https://jsonplaceholder.typicode.com").build();
+    }
+
+    @BeforeClass
+    public void createResponseSpecification() {
+        responseSpecification = new ResponseSpecBuilder()
+                .expectStatusCode(200)
+                .expectContentType(ContentType.JSON)
+                .build();
+    }
+
+    @DataProvider()
+    public static Object[][] usernameDetails() {
+        return new Object[][]{
+                {"Delphine"},
+        };
+    }
+
+    @Test(dataProvider = "usernameDetails")
+    public void validateEmailAddresses(String username) {
         given()
+                .spec(requestSpecification)
                 .log().all()
                 .when()
-                .get("https://jsonplaceholder.typicode.com/posts/1")
+                .get("users?username=" + username)
                 .then()
-                .log().body()
-                .assertThat()
-                .statusCode(200)
-                .contentType(ContentType.JSON)
-                .body("id", equalTo(1));
+                .spec(responseSpecification)
+                .log().body();
     }
 }

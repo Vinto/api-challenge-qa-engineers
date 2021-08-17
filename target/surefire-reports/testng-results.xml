@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="1" passed="1" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2021-08-18T00:22:21 CAT" name="Suite" finished-at="2021-08-18T00:22:24 CAT" duration-ms="3351">
+    <groups>
+    </groups>
+    <test started-at="2021-08-18T00:22:21 CAT" name="Api" finished-at="2021-08-18T00:22:24 CAT" duration-ms="3351">
+      <class name="PostTest">
+        <test-method is-config="true" signature="createRequestSpecification()[pri:0, instance:PostTest@67e2d983]" started-at="2021-08-18T00:22:21 CAT" name="createRequestSpecification" finished-at="2021-08-18T00:22:22 CAT" duration-ms="628" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- createRequestSpecification -->
+        <test-method is-config="true" signature="createResponseSpecification()[pri:0, instance:PostTest@67e2d983]" started-at="2021-08-18T00:22:22 CAT" name="createResponseSpecification" finished-at="2021-08-18T00:22:22 CAT" duration-ms="51" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- createResponseSpecification -->
+        <test-method signature="validateEmailAddresses(java.lang.String)[pri:0, instance:PostTest@67e2d983]" started-at="2021-08-18T00:22:22 CAT" name="validateEmailAddresses" data-provider="usernameDetails" finished-at="2021-08-18T00:22:24 CAT" duration-ms="2645" status="PASS">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[Delphine]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- validateEmailAddresses -->
+      </class> <!-- PostTest -->
+    </test> <!-- Api -->
+  </suite> <!-- Suite -->
+</testng-results>

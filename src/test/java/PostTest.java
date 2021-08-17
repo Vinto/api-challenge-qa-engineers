@@ -66,6 +66,6 @@ public class PostTest {
                 .get("posts?userId=" + userId)
                 .then()
                 .spec(responseSpecification)
-                .log().body();w
+                .log().body();
     }
 }

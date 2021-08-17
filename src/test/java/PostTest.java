@@ -38,6 +38,8 @@ public class PostTest {
 
     @Test(dataProvider = "usernameDetails")
     public void validateEmailAddresses(String username) {
+
+        // Search for Delphine
         given()
                 .spec(requestSpecification)
                 .log().all()
@@ -46,5 +48,24 @@ public class PostTest {
                 .then()
                 .spec(responseSpecification)
                 .log().body();
+
+        // Extract id which is the userId
+        int userId = given()
+                .spec(requestSpecification)
+                .when()
+                .get("users?username=" + username)
+                .then()
+                .extract()
+                .path("[0].id");
+
+        // Fetch posts written by user with userId in response
+        given()
+                .spec(requestSpecification)
+                .log().all()
+                .when()
+                .get("posts?userId=" + userId)
+                .then()
+                .spec(responseSpecification)
+                .log().body();w
     }
 }

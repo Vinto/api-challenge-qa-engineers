@@ -15,10 +15,12 @@ public class PostTest {
     private static RequestSpecification requestSpecification;
     private static ResponseSpecification responseSpecification;
 
+    String baseUrl = ReadDataProperties.getInstance().getUrl();
+
     @BeforeClass
     public void createRequestSpecification() {
         requestSpecification = new RequestSpecBuilder()
-                .setBaseUri("https://jsonplaceholder.typicode.com").build();
+                .setBaseUri(baseUrl).build();
     }
 
     @BeforeClass

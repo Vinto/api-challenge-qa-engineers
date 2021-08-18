@@ -3,11 +3,17 @@ import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
 
 import static io.restassured.RestAssured.given;
+import org.apache.commons.validator.routines.EmailValidator;
 
+import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
+
+import java.util.List;
 
 public class PostTest {
 
@@ -30,39 +36,55 @@ public class PostTest {
                 .build();
     }
 
-    @Test(dataProvider = "usernameDetails", dataProviderClass = DataProviderTestData.class)
-    public void validateEmailAddresses(String username) {
-
-        // Search for Delphine
-        given()
-                .spec(requestSpecification)
-                .log().all()
-                .when()
-                .get("users?username=" + username)
-                .then()
-                .spec(responseSpecification)
-                .log().body();
-
-        // Extract id which is the userId
-        int userId = given()
+    private int getUserId(String username) {
+        Response response = given()
                 .spec(requestSpecification)
                 .when()
-                .get("users?username=" + username)
-                .then()
-                .extract()
-                .path("[0].id");
+                .get("users?username=" + username);
 
-        // Fetch posts written by user with userId in response
-        given()
-                .spec(requestSpecification)
-                .log().all()
-                .when()
-                .get("posts?userId=" + userId)
-                .then()
-                .spec(responseSpecification)
-                .log().body();
+        Assert.assertEquals(200, response.statusCode());
+
+        int uId = response.then().extract().path("[0].id");
+
+        return uId;
     }
 
+    @Test(dataProvider = "usernameDetails", dataProviderClass = DataProviderTestData.class)
+    public void validateEmailAddresses(String username) {
+        int userId = getUserId(username);
+
+        // Fetch posts written by user with userId in response
+        Response response = given()
+                .spec(requestSpecification)
+                .when()
+                .get("posts?userId=" + userId);
+
+        List postIds = response.jsonPath().getList("id");
+
+        SoftAssert softAssert = new SoftAssert();
+
+        for(Object id: postIds) {
+            response = given()
+                    .spec(requestSpecification)
+                    .when()
+                    .get("posts/" + id + "/comments");
+
+            List emails = response.jsonPath().getList("email");
+
+            System.out.println(emails);
+
+            for(Object email: emails) {
+                boolean valid = EmailValidator.getInstance().isValid(email.toString());
+                System.out.println(valid);
+                softAssert.assertTrue(valid, email + " from post " + id + " is invalid");
+            }
+        }
+        softAssert.assertAll();
+    }
+
+    /**
+     * Fetching a user with an invalid userId
+     */
     @Test
     public void invalidUserId() {
         given()

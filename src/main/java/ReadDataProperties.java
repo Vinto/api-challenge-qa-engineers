@@ -7,6 +7,9 @@ public class ReadDataProperties {
     private static final Object lock = new Object();
     private static String url;
 
+    /**
+     * @return
+     */
     public static ReadDataProperties getInstance() {
         if (instance == null) {
             synchronized (lock) {
@@ -29,6 +32,9 @@ public class ReadDataProperties {
         url = properties.getProperty("url");
     }
 
+    /**
+     * @return
+     */
     public String getUrl() {
         return url;
     }

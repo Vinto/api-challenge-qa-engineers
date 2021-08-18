@@ -7,7 +7,6 @@ import static io.restassured.RestAssured.given;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 public class PostTest {
@@ -31,14 +30,7 @@ public class PostTest {
                 .build();
     }
 
-    @DataProvider()
-    public static Object[][] usernameDetails() {
-        return new Object[][]{
-                {"Delphine"},
-        };
-    }
-
-    @Test(dataProvider = "usernameDetails")
+    @Test(dataProvider = "usernameDetails", dataProviderClass = DataProviderTestData.class)
     public void validateEmailAddresses(String username) {
 
         // Search for Delphine

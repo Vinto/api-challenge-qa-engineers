@@ -70,4 +70,36 @@ public class PostTest {
                 .spec(responseSpecification)
                 .log().body();
     }
+
+    @Test
+    public void invalidUserId() {
+        given()
+                .spec(requestSpecification)
+                .when()
+                .get("users?userId=x.x.x.x.x")
+                .then()
+                .spec(responseSpecification)
+                .log().body();
+    }
+
+    @Test
+    public void invalidUsername() {
+        given()
+                .spec(requestSpecification)
+                .when()
+                .get("users?username=x.x.x.x.x")
+                .then()
+                .spec(responseSpecification)
+                .log().body();
+    }
+
+    @Test
+    public void invalidPostId() {
+        given()
+                .spec(requestSpecification)
+                .when()
+                .get("posts/x.x.x.x.x")
+                .then()
+                .log().body();
+    }
 }

@@ -36,6 +36,11 @@ public class PostTest {
                 .build();
     }
 
+    /**
+     * Return a userId given a valid username
+     * @param username
+     * @return uId
+     */
     private int getUserId(String username) {
         Response response = given()
                 .spec(requestSpecification)
@@ -49,16 +54,22 @@ public class PostTest {
         return uId;
     }
 
+    /**
+     * Fetch posts of a user, then validate email addresses in the
+     * comments of the posts
+     * @param username
+     */
     @Test(dataProvider = "usernameDetails", dataProviderClass = DataProviderTestData.class)
     public void validateEmailAddresses(String username) {
         int userId = getUserId(username);
 
-        // Fetch posts written by user with userId in response
+        /* Fetch posts written by user with userId in response */
         Response response = given()
                 .spec(requestSpecification)
                 .when()
                 .get("posts?userId=" + userId);
 
+        /* Get a list of ids of the posts */
         List postIds = response.jsonPath().getList("id");
 
         SoftAssert softAssert = new SoftAssert();
@@ -69,13 +80,17 @@ public class PostTest {
                     .when()
                     .get("posts/" + id + "/comments");
 
+            /* Get a list of emails in the comments of the posts */
             List emails = response.jsonPath().getList("email");
 
             System.out.println(emails);
 
             for(Object email: emails) {
+                /* Validate email addresses */
                 boolean valid = EmailValidator.getInstance().isValid(email.toString());
                 System.out.println(valid);
+
+                /* Continue to the next step even after encountering a failure */
                 softAssert.assertTrue(valid, email + " from post " + id + " is invalid");
             }
         }
@@ -96,6 +111,9 @@ public class PostTest {
                 .log().body();
     }
 
+    /**
+     * Fetching a user with an invalid username
+     */
     @Test
     public void invalidUsername() {
         given()
@@ -107,6 +125,9 @@ public class PostTest {
                 .log().body();
     }
 
+    /**
+     * Fetching a user with an invalid postId
+     */
     @Test
     public void invalidPostId() {
         given()

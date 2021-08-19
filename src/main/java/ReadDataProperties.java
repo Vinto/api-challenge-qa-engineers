@@ -8,6 +8,7 @@ public class ReadDataProperties {
     private static String url;
 
     /**
+     * Return a Singleton instance
      * @return
      */
     public static ReadDataProperties getInstance() {
@@ -20,6 +21,9 @@ public class ReadDataProperties {
         return instance;
     }
 
+    /**
+     * Load the data properties file
+     */
     private void loadProperties() {
         Properties properties = new Properties();
 
@@ -33,6 +37,7 @@ public class ReadDataProperties {
     }
 
     /**
+     * Return the url value in the data properties file
      * @return
      */
     public String getUrl() {

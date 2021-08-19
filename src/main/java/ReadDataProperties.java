@@ -9,6 +9,7 @@ public class ReadDataProperties {
 
     /**
      * Return a Singleton instance
+     *
      * @return
      */
     public static ReadDataProperties getInstance() {
@@ -38,6 +39,7 @@ public class ReadDataProperties {
 
     /**
      * Return the url value in the data properties file
+     *
      * @return
      */
     public String getUrl() {

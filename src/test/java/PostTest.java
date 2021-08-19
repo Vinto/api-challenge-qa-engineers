@@ -3,6 +3,7 @@ import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
 
 import static io.restassured.RestAssured.given;
+
 import org.apache.commons.validator.routines.EmailValidator;
 
 import io.restassured.response.Response;
@@ -22,9 +23,15 @@ public class PostTest {
 
     String baseUrl = ReadDataProperties.getInstance().getUrl();
 
+    private static String requestBody = "{\n" +
+            "  \"title\": \"Hello World\",\n" +
+            "  \"body\": \"Hello\",\n" +
+            "  \"userId\": \"1\" \n}";
+
     @BeforeClass
     public void createRequestSpecification() {
         requestSpecification = new RequestSpecBuilder()
+                .setContentType(ContentType.JSON)
                 .setBaseUri(baseUrl).build();
     }
 
@@ -38,6 +45,7 @@ public class PostTest {
 
     /**
      * Return a userId given a valid username
+     *
      * @param username
      * @return uId
      */
@@ -57,6 +65,7 @@ public class PostTest {
     /**
      * Fetch posts of a user, then validate email addresses in the
      * comments of the posts
+     *
      * @param username
      */
     @Test(dataProvider = "usernameDetails", dataProviderClass = DataProviderTestData.class)
@@ -74,7 +83,7 @@ public class PostTest {
 
         SoftAssert softAssert = new SoftAssert();
 
-        for(Object id: postIds) {
+        for (Object id : postIds) {
             response = given()
                     .spec(requestSpecification)
                     .when()
@@ -85,7 +94,7 @@ public class PostTest {
 
             System.out.println(emails);
 
-            for(Object email: emails) {
+            for (Object email : emails) {
                 /* Validate email addresses */
                 boolean valid = EmailValidator.getInstance().isValid(email.toString());
                 System.out.println(valid);
@@ -136,5 +145,55 @@ public class PostTest {
                 .get("posts/x.x.x.x.x")
                 .then()
                 .log().body();
+    }
+
+    /**
+     * Post a valid POST request
+     */
+    @Test
+    public void postValidPost() {
+        Response response = given()
+                .spec(requestSpecification)
+                .body(requestBody)
+                .when()
+                .post("/posts")
+                .then().extract().response();
+
+        Assert.assertEquals(201, response.statusCode());
+        Assert.assertEquals("101", response.jsonPath().getString("id"));
+    }
+
+    /**
+     * Send a valid PUT request
+     */
+    @Test
+    public void sendValidPutRequest() {
+        Response response = given()
+                .spec(requestSpecification)
+                .body(requestBody)
+                .when()
+                .put("/posts/1")
+                .then().extract().response();
+
+        Assert.assertEquals(200, response.statusCode());
+        Assert.assertEquals("Hello World", response.jsonPath().getString("title"));
+        Assert.assertEquals("Hello", response.jsonPath().getString("body"));
+        Assert.assertEquals("1", response.jsonPath().getString("userId"));
+        Assert.assertEquals("1", response.jsonPath().getString("id"));
+    }
+
+    /**
+     * Send a valid DELETE request
+     */
+    @Test
+    public void sendValidDeleteRequest() {
+        Response response = given()
+                .spec(requestSpecification)
+                .body(requestBody)
+                .when()
+                .delete("/posts/1")
+                .then().extract().response();
+
+        Assert.assertEquals(200, response.statusCode());
     }
 }

@@ -111,13 +111,12 @@ public class PostTest {
      */
     @Test
     public void invalidUserId() {
-        given()
+        Response response = given()
                 .spec(requestSpecification)
                 .when()
-                .get("users?userId=x.x.x.x.x")
-                .then()
-                .spec(responseSpecification)
-                .log().body();
+                .get("users?userId=x.x.x.x.x");
+
+        Assert.assertEquals(200, response.statusCode());
     }
 
     /**
@@ -125,13 +124,12 @@ public class PostTest {
      */
     @Test
     public void invalidUsername() {
-        given()
+        Response response = given()
                 .spec(requestSpecification)
                 .when()
-                .get("users?username=x.x.x.x.x")
-                .then()
-                .spec(responseSpecification)
-                .log().body();
+                .get("users?username=x.x.x.x.x");
+
+        Assert.assertEquals(200, response.statusCode());
     }
 
     /**
@@ -139,12 +137,12 @@ public class PostTest {
      */
     @Test
     public void invalidPostId() {
-        given()
+        Response response = given()
                 .spec(requestSpecification)
                 .when()
-                .get("posts/x.x.x.x.x")
-                .then()
-                .log().body();
+                .get("posts/x.x.x.x.x");
+
+        Assert.assertEquals(404, response.statusCode());
     }
 
     /**

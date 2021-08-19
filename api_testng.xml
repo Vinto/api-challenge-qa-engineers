@@ -4,6 +4,7 @@
     <test name="ApiTests">
         <classes>
             <class name="PostTest"/>
+            <class name="UserTest"/>
         </classes>
     </test>
 </suite>

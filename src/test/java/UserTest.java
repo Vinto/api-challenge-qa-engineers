@@ -8,6 +8,7 @@ import org.testng.annotations.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasSize;
 
 public class UserTest {
 
@@ -30,9 +31,11 @@ public class UserTest {
         Response response = given()
                 .spec(requestSpecification)
                 .when()
-                .get("users?userId=x.x.x.x.x");
+                .get("users?id=x.x.x.x.x");
 
         Assert.assertEquals(200, response.statusCode());
+
+        response.then().body("", hasSize(0));
     }
 
     /**
@@ -46,6 +49,8 @@ public class UserTest {
                 .get("users?username=x.x.x.x.x");
 
         Assert.assertEquals(200, response.statusCode());
+
+        response.then().body("", hasSize(0));
     }
 
     /**

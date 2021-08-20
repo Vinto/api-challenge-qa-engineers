@@ -1,15 +1,12 @@
 import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.hasItem;
 
 import org.apache.commons.validator.routines.EmailValidator;
 
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import io.restassured.specification.ResponseSpecification;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -20,7 +17,6 @@ import java.util.List;
 public class PostTest {
 
     private static RequestSpecification requestSpecification;
-    private static ResponseSpecification responseSpecification;
 
     String baseUrl = ReadDataProperties.getInstance().getUrl();
 
@@ -34,14 +30,6 @@ public class PostTest {
         requestSpecification = new RequestSpecBuilder()
                 .setContentType(ContentType.JSON)
                 .setBaseUri(baseUrl).build();
-    }
-
-    @BeforeClass
-    public void createResponseSpecification() {
-        responseSpecification = new ResponseSpecBuilder()
-                .expectStatusCode(200)
-                .expectContentType(ContentType.JSON)
-                .build();
     }
 
     /**
@@ -93,12 +81,9 @@ public class PostTest {
             /* Get a list of emails in the comments of the posts */
             List emails = response.jsonPath().getList("email");
 
-            System.out.println(emails);
-
             for (Object email : emails) {
                 /* Validate email addresses */
                 boolean valid = EmailValidator.getInstance().isValid(email.toString());
-                System.out.println(valid);
 
                 /* Continue to the next step even after encountering a failure */
                 softAssert.assertTrue(valid, email + " from post " + id + " is invalid");

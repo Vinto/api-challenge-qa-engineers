@@ -32,3 +32,6 @@ mvn clean test -Papi
 
 # Surefire Reports 
 * Can be found here: `target/surefire-reports/index.html`
+
+# Postman files 
+* Can be found in the `postman` directory inside the root directory.

@@ -1,4 +1,4 @@
-# Software Qualtiy Engineer Api Challenge
+# Software Quality Engineer Api Challenge
 
 # Local Development
 To be able to add new tests and run the tests on local machine, the following tools have to be installed:
